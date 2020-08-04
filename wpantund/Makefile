@@ -1,18 +1,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wpantund
-PKG_VERSION:=2017-08-21
+PKG_VERSION:=2019-11-13
 PKG_RELEASE=$(PKG_SOURCE_VERSION)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/openthread/wpantund.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=418ff172c11c5f99fc15af376fb6cd5c9ac14946
-PKG_FIXUP:=autoreconf
-PKG_USE_MIPS16:=0
-PKG_BUILD_DEPENDS:=autoconf-archive/host
-PKG_LICENSE:=ASL-2.0
+PKG_SOURCE_URL:=https://github.com/openthread/wpantund.git
+PKG_SOURCE_VERSION:=9e1c0daf7d139ef2668ca28faff8789d2e68364d
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 include $(INCLUDE_DIR)/package.mk
@@ -21,8 +17,7 @@ include $(INCLUDE_DIR)/host-build.mk
 
 MAKE_PATH:=src
 CONFIGURE_ARGS += \
-	--sysconfdir=/etc \
-	--enable-debug
+	--sysconfdir=/etc 
 
 define Host/Configure
 	$(call Host/Configure/Default)
@@ -39,8 +34,8 @@ endef
 define Package/wpantund
 	SECTION:=net
 	CATEGORY:=Network
-	TITLE:=Userspace WPAN Network Daemon
-	DEPENDS:=+libreadline +dbus +libstdcpp +libncurses +boost +boost-signals +boost-system
+	TITLE:=wpantund
+	DEPENDS:=+libreadline +dbus +libstdcpp +libncurses +boost +boost-signals +boost-system +kmod-tun
 endef
 
 define Package/wpantund/description
@@ -51,6 +46,7 @@ define Package/wpantund/description
 endef
 
 define Build/Configure
+	cd $(PKG_BUILD_DIR) && ./bootstrap.sh
 	$(call Build/Configure/Default,--sysconfdir=/etc)
 endef
 
@@ -79,8 +75,6 @@ define Package/wpantund/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/wpantund/wpantund.conf $(1)/etc/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/wpantund/wpan-properties.h $(1)/usr/local/include/wpantund
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/wpantund/wpan-error.h $(1)/usr/local/include/wpantund
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/doc/wpantund.1 $(1)/usr/local/share/man/man1/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/doc/wpanctl.1 $(1)/usr/local/share/man/man1/
 endef
 
 $(eval $(call HostBuild))
