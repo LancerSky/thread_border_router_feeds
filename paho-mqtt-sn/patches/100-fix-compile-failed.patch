@@ -1,0 +1,32 @@
+Index: paho-mqtt-sn-2020-07-09/MQTTSNGateway/Makefile
+===================================================================
+--- paho-mqtt-sn-2020-07-09.orig/MQTTSNGateway/Makefile
++++ paho-mqtt-sn-2020-07-09/MQTTSNGateway/Makefile
+@@ -88,7 +88,7 @@ DEFS :=
+ LIB :=
+ LIBS += $(LIB) -L/usr/local/lib
+ LDFLAGS := 
+-CXXFLAGS := -Wall -O3 -std=c++11
++CXXFLAGS += -Wall -O3 -std=c++11
+ LDADD := -lpthread -lssl -lcrypto -lrt
+ OUTDIR := Build
+ 
+@@ -156,4 +156,4 @@ install:
+ exectest:
+ 	./$(OUTDIR)/$(TESTPROGNAME) -f ./gateway.conf
+ 
+-	
+\ No newline at end of file
++	
+Index: paho-mqtt-sn-2020-07-09/MQTTSNGateway/src/MQTTSNGWEncapsulatedPacket.cpp
+===================================================================
+--- paho-mqtt-sn-2020-07-09.orig/MQTTSNGateway/src/MQTTSNGWEncapsulatedPacket.cpp
++++ paho-mqtt-sn-2020-07-09/MQTTSNGateway/src/MQTTSNGWEncapsulatedPacket.cpp
+@@ -16,6 +16,7 @@
+ #include "MQTTSNGWPacket.h"
+ #include "MQTTSNGWEncapsulatedPacket.h"
+ #include "MQTTSNPacket.h"
++#include <stdio.h>
+ #include <string.h>
+ 
+ using namespace MQTTSNGW;
